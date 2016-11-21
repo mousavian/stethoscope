@@ -1,7 +1,6 @@
-udpserver
+# Stethoscope - NGN QoS UDP Server
 =====
 
-# NGN-QoS-Server
 
 Build
 -----
