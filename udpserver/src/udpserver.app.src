@@ -1,0 +1,16 @@
+{application, udpserver,
+ [{description, "QoS UDP Listerner"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { udpserver_app, []}},
+  {applications,
+   [kernel,
+    stdlib
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, []},
+  {links, []}
+ ]}.
