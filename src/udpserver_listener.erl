@@ -1,30 +1,44 @@
 -module (udpserver_listener).
 
--export ([start/0, handler/2]).
-
--define(PORT, 12345).
+-export ([start/0, handler/4]).
 
 
 start() ->
     spawn_link(udpserver_kafka, start, []),
-
-    {ok, Socket} = gen_udp:open(?PORT, [binary, {active, false}]),
-    io:format("UDP server is started on port ~p~n", [?PORT]),
-
-    % increase socket buffer size to 50MB
-    inet:setopts(Socket, [{recbuf, 50*1024*1024}]),
-
-    loop(Socket).
+    init_pcap(),
+    loop().
 
 
-loop(Socket) ->
-    inet:setopts(Socket, [{active, once}]),
+init_pcap() ->
+    Interface = os:getenv("INTERFACE_TO_SNIFF"),
+    Promiscuous = true,
+    Snaplen = 65535,
+    Options = [
+            {interface, Interface},
+            {promiscuous, Promiscuous},
+            {snaplen, Snaplen}
+        ],
+    {ok, Pid} = epcap:start_link(Options),
+
+    error_logger:info_report("PCAP initiated"),
+    Pid.
+
+
+loop() ->
     receive
-        {udp, Socket, Host, _Port, Bin} ->
-            spawn(?MODULE, handler, [Host, Bin]),
-            loop(Socket)
+        {packet, DataLink, Time, Length, Data} ->
+            spawn(?MODULE, handler, [DataLink, Time, Length, Data]),
+            loop()
     end.
 
 
-handler(_Host, Bin) ->
-    udpserver_kafka:produce(Bin).
+handler(DataLink, _Time, _Length, Data) ->
+    ProtocolPort = packet_utils:get_protocol(DataLink, Data),
+    case ProtocolPort of
+        {tcp, Port} ->
+            udpserver_kafka:produce({<<Port>>, Data});
+        {udp, Port} ->
+            udpserver_kafka:produce({<<Port>>, Data});
+        _ ->
+            ok
+    end.

@@ -13,6 +13,7 @@ start() ->
 
     {ok, _} = application:ensure_all_started(ekaf),
 
+    error_logger:info_report("Kafka Connected"),
     ok.
 
 
