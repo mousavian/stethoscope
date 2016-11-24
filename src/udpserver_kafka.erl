@@ -7,8 +7,6 @@
 -define (TOPIC, <<"foobar">>).
 
 start() ->
-    ok = application:load(ekaf),
-
     application:set_env(ekaf, ekaf_bootstrap_broker, {?KAFKA_HOST, ?KAFKA_PORT}),
 
     {ok, _} = application:ensure_all_started(ekaf),

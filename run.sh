@@ -9,3 +9,6 @@ rebar3 clean && rm _build/default/lib/udpserver -rf 2>/dev/null && rebar3 compil
 
 echo "-- running --"
 erl -env ERL_LIBS _build/default/lib -eval 'application:ensure_all_started(udpserver).' -noshell
+
+# production
+#./bin/udpserver foreground
