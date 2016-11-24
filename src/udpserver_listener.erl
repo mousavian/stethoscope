@@ -15,6 +15,7 @@ init_pcap() ->
     Snaplen = 65535,
     Options = [
             {interface, Interface},
+            {filter, "udp or tcp"},
             {promiscuous, Promiscuous},
             {snaplen, Snaplen}
         ],
@@ -32,13 +33,6 @@ loop() ->
     end.
 
 
-handler(DataLink, _Time, _Length, Data) ->
-    ProtocolPort = packet_utils:get_protocol(DataLink, Data),
-    case ProtocolPort of
-        {tcp, Port} ->
-            udpserver_kafka:produce({<<Port>>, Data});
-        {udp, Port} ->
-            udpserver_kafka:produce({<<Port>>, Data});
-        _ ->
-            ok
-    end.
+handler(DataLink, Time, Length, Data) ->
+    PCAP = packet_utils:convert_to_pcap_format(Time, Length, Data),
+    udpserver_kafka:produce({<<DataLink>>, PCAP}).

@@ -1,8 +1,14 @@
 -module (packet_utils).
 
--export ([stringify/2, get_protocol/2]).
+-export ([stringify/2, get_protocol/2, convert_to_pcap_format/3]).
 
 -define(is_print(C), C >= $\s, C =< $~).
+-define(MAGIC, 16#a1b2c3d4).
+-define(SNAPLEN, 65535).
+-define(GMT_TO_LOCALTIME, 65535).
+-define(SIGFIGS, 0).
+-define(VERSION_MAJOR, 2).
+-define(VERSION_MINOR, 4).
 
 -include_lib("pkt/include/pkt.hrl").
 
@@ -161,3 +167,26 @@ iso_8601_fmt(DateTime) ->
     {{Year,Month,Day},{Hour,Min,Sec}} = DateTime,
     lists:flatten(io_lib:format("~4.10.0B-~2.10.0B-~2.10.0B ~2.10.0B:~2.10.0B:~2.10.0B",
             [Year, Month, Day, Hour, Min, Sec])).
+
+
+
+
+
+
+
+network(null) -> 0;
+network(ethernet) -> 1;
+network(mtp2) -> 140;
+network(mtp3) -> 141;
+network(sccp) -> 142;
+network(ipv4) -> 228;
+network(ipv6) -> 229.
+
+convert_to_pcap_format({MegaSecs, Secs, _}, Len, Binary) ->
+    Network = network(ethernet),
+    Header = <<?MAGIC:32, ?VERSION_MAJOR:16, ?VERSION_MINOR:16,
+        ?GMT_TO_LOCALTIME:32, ?SIGFIGS:32, ?SNAPLEN:32, Network:32>>,
+
+    Timestamp = MegaSecs * 1000000 + Secs,
+    Timestamp_us = (Timestamp rem 1000) * 1000,
+    <<Header/binary, Timestamp:32, Timestamp_us:32, Len:32, Len:32, Binary/binary>>.
