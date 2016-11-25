@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
-%% @doc udpserver top level supervisor.
+%% @doc sniffer top level supervisor.
 %% @end
 %%%-------------------------------------------------------------------
 
--module(udpserver_sup).
+-module(sniffer_sup).
 
 -behaviour(supervisor).
 
@@ -30,11 +30,11 @@ start_link() ->
 init([]) ->
     UDP_Server = #{
         id => udp_listener,
-        start => {udpserver_listener, start, []},
+        start => {sniffer_listener, start, []},
         restart => permanent,
         shutdown => 5000,
         type => worker,
-        modules => [udpserver]
+        modules => [sniffer]
     },
 
     Children = [UDP_Server],

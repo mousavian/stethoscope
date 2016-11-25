@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
-%% @doc udpserver public API
+%% @doc sniffer public API
 %% @end
 %%%-------------------------------------------------------------------
 
--module(udpserver_app).
+-module(sniffer_app).
 
 -behaviour(application).
 
@@ -15,7 +15,7 @@
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
-    udpserver_sup:start_link().
+    sniffer_sup:start_link().
 
 %%--------------------------------------------------------------------
 stop(_State) ->

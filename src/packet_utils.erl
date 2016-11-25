@@ -160,16 +160,6 @@ to_hex(Bin) when is_binary(Bin) ->
 ether_addr(MAC) ->
     string:join(to_hex(MAC), ":").
 
-timestamp(Now) when is_tuple(Now) ->
-    iso_8601_fmt(calendar:now_to_local_time(Now)).
-
-iso_8601_fmt(DateTime) ->
-    {{Year,Month,Day},{Hour,Min,Sec}} = DateTime,
-    lists:flatten(io_lib:format("~4.10.0B-~2.10.0B-~2.10.0B ~2.10.0B:~2.10.0B:~2.10.0B",
-            [Year, Month, Day, Hour, Min, Sec])).
-
-
-
 
 
 

@@ -1,8 +1,8 @@
-{application, udpserver,
- [{description, "QoS UDP Listerner"},
+{application, sniffer,
+ [{description, "Packet Sniffer"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { udpserver_app, []}},
+  {mod, { sniffer_app, []}},
   {applications,
    [kernel,
     stdlib

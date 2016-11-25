@@ -1,4 +1,4 @@
--module (udpserver_kafka).
+-module (sniffer_kafka).
 
 -export ([start/0, produce/1]).
 

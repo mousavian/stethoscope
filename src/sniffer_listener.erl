@@ -1,10 +1,10 @@
--module (udpserver_listener).
+-module (sniffer_listener).
 
 -export ([start/0, handler/4]).
 
 
 start() ->
-    spawn_link(udpserver_kafka, start, []),
+    spawn_link(sniffer_kafka, start, []),
     init_pcap(),
     loop().
 
@@ -35,4 +35,4 @@ loop() ->
 
 handler(DataLink, Time, Length, Data) ->
     PCAP = packet_utils:convert_to_pcap_format(Time, Length, Data),
-    udpserver_kafka:produce({<<DataLink>>, PCAP}).
+    sniffer_kafka:produce({<<DataLink>>, PCAP}).
