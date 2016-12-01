@@ -4,7 +4,8 @@
 
 -define (KAFKA_HOST, "kafka.dev").
 -define (KAFKA_PORT, 9092).
--define (TOPIC, <<"foobar">>).
+-define (RAW_PACKETS_TOPIC, <<"raw_packets">>).
+-define (DECODED_LAYERS_TOPIC, <<"decoded_layers">>).
 
 start() ->
     application:set_env(ekaf, ekaf_bootstrap_broker, {?KAFKA_HOST, ?KAFKA_PORT}),
@@ -16,4 +17,4 @@ start() ->
 
 
 produce(Data) ->
-    ekaf:produce_sync(?TOPIC, Data).
+    ekaf:produce_sync(?RAW_PACKETS_TOPIC, Data).
