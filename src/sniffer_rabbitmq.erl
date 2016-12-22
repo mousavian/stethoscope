@@ -4,12 +4,16 @@
 
 -define (RABBITMQ_HOST, "kafka.dev").
 -define (RABBITMQ_PORT, 5672).
--define (RABBITMQ_USERNAME, <<"guest">>).
--define (RABBITMQ_PASSWORD, <<"guest">>).
+-define (RABBITMQ_USERNAME, <<"ngnrem">>).
+-define (RABBITMQ_PASSWORD, <<"merngn">>).
 -define (RAW_PACKETS_TOPIC, <<"raw_packets">>).
 -define (DECODED_LAYERS_TOPIC, <<"decoded_layers">>).
 
 -include_lib("amqp_client/include/amqp_client.hrl").
+
+%% rabbitmqctl add_user ngnrem merngn
+%% rabbitmqctl set_user_tags ngnrem administrator
+%% rabbitmqctl set_permissions -p / ngnrem ".*" ".*" ".*"
 
 start() ->
     %% Start a network connection
