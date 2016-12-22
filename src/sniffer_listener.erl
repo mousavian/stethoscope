@@ -1,12 +1,12 @@
 -module (sniffer_listener).
 
--export ([start/0, handler/4]).
+-export ([start/0, handler/5]).
 
 
 start() ->
-    spawn_link(sniffer_kafka, start, []),
+    {_, Channel} = sniffer_rabbitmq:start(),
     init_pcap(),
-    loop().
+    loop(Channel).
 
 
 init_pcap() ->
@@ -25,13 +25,13 @@ init_pcap() ->
     Pid.
 
 
-loop() ->
+loop(Channel) ->
     receive
         {packet, DataLink, Time, Length, Data} ->
-            spawn(?MODULE, handler, [DataLink, Time, Length, Data]),
-            loop()
+            spawn(?MODULE, handler, [Channel, DataLink, Time, Length, Data]),
+            loop(Channel)
     end.
 
 
-handler(_DataLink, _Time, _Length, Data) ->
-    sniffer_kafka:produce(Data).
+handler(Channel, _DataLink, _Time, _Length, Data) ->
+    sniffer_rabbitmq:produce(Channel, Data).
