@@ -8,7 +8,14 @@
     stdlib
    ]},
   {env,[]},
-  {modules, []},
+  {modules, [
+    sniffer,
+    sniffer_app,
+    sniffer_sup,
+    sniffer_listener,
+    sniffer_kafka,
+    packet_utils
+  ]},
 
   {maintainers, []},
   {licenses, []},

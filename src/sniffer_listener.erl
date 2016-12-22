@@ -33,6 +33,5 @@ loop() ->
     end.
 
 
-handler(DataLink, Time, Length, Data) ->
-    PCAP = packet_utils:convert_to_pcap_format(Time, Length, Data),
-    sniffer_kafka:produce({<<DataLink>>, PCAP}).
+handler(_DataLink, _Time, _Length, Data) ->
+    sniffer_kafka:produce(Data).
