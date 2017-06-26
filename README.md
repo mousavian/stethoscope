@@ -1,4 +1,4 @@
-# Stethoscope - NGN QoS UDP Server
+# Stethoscope - A packet sniffer for Erlang
 
 Build
 -----
